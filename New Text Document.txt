@@ -1,0 +1,481 @@
+package com.app.core;
+
+public class CircularLinkedList {
+    private Node head = null;
+
+
+    public void addFirst(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            head.next = head;
+        } else {
+            Node tail = head;
+            while (tail.next != head) {
+                tail = tail.next;
+            }
+            newNode.next = head;
+            tail.next = newNode;
+            head = newNode;
+        }
+    }
+
+    public void addLast(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            head.next = head;
+        } else {
+            Node tail = head;
+            while (tail.next != head) {
+                tail = tail.next;
+            }
+            tail.next = newNode;
+            newNode.next = head;
+        }
+    }
+
+    public int insertAtPosition(int data, int position) {
+        if (position <= 0) {
+            return -1;
+        }
+        Node newNode = new Node(data);
+        if (position == 1) {
+            addFirst(data);
+            return 0;
+        }
+        Node temp = head;
+        for (int i = 1; i < position - 1; i++) {
+            temp = temp.next;
+            if (temp == head) {
+                return -1;
+            }
+        }
+        newNode.next = temp.next;
+        temp.next = newNode;
+        return 0;
+    }
+
+    public void deleteFirst() {
+        if (head == null) {
+            return;
+        }
+        if (head.next == head) {
+            head = null;
+        } else {
+            Node tail = head;
+            while (tail.next != head) {
+                tail = tail.next;
+            }
+            head = head.next;
+            tail.next = head;
+        }
+    }
+
+    public void deleteLast() {
+        if (head == null) {
+            return;
+        }
+        if (head.next == head) {
+            head = null;
+        } else {
+            Node temp = head;
+            while (temp.next.next != head) {
+                temp = temp.next;
+            }
+            temp.next = head;
+        }
+    }
+
+    public void deleteAtPosition(int position) {
+        if (position <= 0 || head == null) {
+            return;
+        }
+        if (position == 1) {
+            deleteFirst();
+            return;
+        }
+        Node temp = head;
+        for (int i = 1; i < position - 1; i++) {
+            temp = temp.next;
+            if (temp.next == head) {
+                return;
+            }
+        }
+        temp.next = temp.next.next;
+    }
+
+    public void printList() {
+        if (head == null) {
+            System.out.println("The list is empty.");
+            return;
+        }
+        Node temp = head;
+        do {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        } while (temp != head);
+        System.out.println();
+    }
+
+    public void sort() {
+        if (head == null || head.next == head) {
+            return;
+        }
+        Node current = head, index = null;
+        int temp;
+        do {
+            index = current.next;
+            while (index != head) {
+                if (current.data > index.data) {
+                    temp = current.data;
+                    current.data = index.data;
+                    index.data = temp;
+                }
+                index = index.next;
+            }
+            current = current.next;
+        } while (current.next != head);
+    }
+
+    public void removeDuplicates() {
+        if (head == null || head.next == head) {
+            return;
+        }
+        Node current = head, index, temp;
+        do {
+            temp = current;
+            index = current.next;
+            while (index != head) {
+                if (current.data == index.data) {
+                    temp.next = index.next;
+                } else {
+                    temp = index;
+                }
+                index = index.next;
+            }
+            current = current.next;
+        } while (current.next != head);
+    }
+
+    public int count() {
+        if (head == null) {
+            return 0;
+        }
+        int count = 0;
+        Node temp = head;
+        do {
+            count++;
+            temp = temp.next;
+        } while (temp != head);
+        return count;
+    }
+
+    public boolean search(int data) {
+        if (head == null) {
+            return false;
+        }
+        Node temp = head;
+        do {
+            if (temp.data == data) {
+                return true;
+            }
+            temp = temp.next;
+        } while (temp != head);
+        return false;
+    }
+}
+
+package com.app.core;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        CircularLinkedList list = new CircularLinkedList();
+        Scanner scanner = new Scanner(System.in);
+        int choice, data, position;
+
+        // Populate the list with sample data
+        list.addFirst(10);
+        list.addFirst(20);
+        list.addLast(30);
+        list.addLast(40);
+        list.insertAtPosition(25, 2);
+
+        boolean exit=false;
+        while (!exit) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Add First");
+            System.out.println("2. Add Last");
+            System.out.println("3. Insert at Position");
+            System.out.println("4. Delete First");
+            System.out.println("5. Delete Last");
+            System.out.println("6. Delete at Position");
+            System.out.println("7. Print List");
+            System.out.println("8. Sort List");
+            System.out.println("9. Remove Duplicates");
+            System.out.println("10. Count Elements");
+            System.out.println("11. Search Data");
+            System.out.println("12. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter data to add at first: ");
+                    data = scanner.nextInt();
+                    list.addFirst(data);
+                    break;
+                case 2:
+                    System.out.print("Enter data to add at last: ");
+                    data = scanner.nextInt();
+                    list.addLast(data);
+                    break;
+                case 3:
+                    System.out.print("Enter data to insert: ");
+                    data = scanner.nextInt();
+                    System.out.print("Enter position: ");
+                    position = scanner.nextInt();
+                    int result = list.insertAtPosition(data, position);
+                    if (result == -1) {
+                        System.out.println("Position does not exist");
+                    } else {
+                        System.out.println("Data inserted at position " + position);
+                    }
+                    break;
+                case 4:
+                    list.deleteFirst();
+                    break;
+                case 5:
+                    list.deleteLast();
+                    break;
+                case 6:
+                    System.out.print("Enter position to delete: ");
+                    position = scanner.nextInt();
+                    list.deleteAtPosition(position);
+                    break;
+                case 7:
+                    list.printList();
+                    break;
+                case 8:
+                    list.sort();
+                    System.out.println("List sorted.");
+                    break;
+                case 9:
+                    list.removeDuplicates();
+                    System.out.println("Duplicates removed.");
+                    break;
+                case 10:
+                    System.out.println("Number of elements: " + list.count());
+                    break;
+                case 11:
+                    System.out.print("Enter data to search: ");
+                    data = scanner.nextInt();
+                    boolean isFound = list.search(data);
+                    if (isFound) {
+                        System.out.println("Element " + data + " found in the list.");
+                    } else {
+                        System.out.println("Element " + data + " not found in the list.");
+                    }
+                    break;
+                case 12:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    exit=true;
+//                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+}
+
+package com.app.core;
+
+public class CircularLinkedList {
+    private Node head = null;
+
+
+    public void addFirst(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            head.next = head;
+        } else {
+            Node tail = head;
+            while (tail.next != head) {
+                tail = tail.next;
+            }
+            newNode.next = head;
+            tail.next = newNode;
+            head = newNode;
+        }
+    }
+
+    public void addLast(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            head.next = head;
+        } else {
+            Node tail = head;
+            while (tail.next != head) {
+                tail = tail.next;
+            }
+            tail.next = newNode;
+            newNode.next = head;
+        }
+    }
+
+    public int insertAtPosition(int data, int position) {
+        if (position <= 0) {
+            return -1;
+        }
+        Node newNode = new Node(data);
+        if (position == 1) {
+            addFirst(data);
+            return 0;
+        }
+        Node temp = head;
+        for (int i = 1; i < position - 1; i++) {
+            temp = temp.next;
+            if (temp == head) {
+                return -1;
+            }
+        }
+        newNode.next = temp.next;
+        temp.next = newNode;
+        return 0;
+    }
+
+    public void deleteFirst() {
+        if (head == null) {
+            return;
+        }
+        if (head.next == head) {
+            head = null;
+        } else {
+            Node tail = head;
+            while (tail.next != head) {
+                tail = tail.next;
+            }
+            head = head.next;
+            tail.next = head;
+        }
+    }
+
+    public void deleteLast() {
+        if (head == null) {
+            return;
+        }
+        if (head.next == head) {
+            head = null;
+        } else {
+            Node temp = head;
+            while (temp.next.next != head) {
+                temp = temp.next;
+            }
+            temp.next = head;
+        }
+    }
+
+    public void deleteAtPosition(int position) {
+        if (position <= 0 || head == null) {
+            return;
+        }
+        if (position == 1) {
+            deleteFirst();
+            return;
+        }
+        Node temp = head;
+        for (int i = 1; i < position - 1; i++) {
+            temp = temp.next;
+            if (temp.next == head) {
+                return;
+            }
+        }
+        temp.next = temp.next.next;
+    }
+
+    public void printList() {
+        if (head == null) {
+            System.out.println("The list is empty.");
+            return;
+        }
+        Node temp = head;
+        do {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        } while (temp != head);
+        System.out.println();
+    }
+
+    public void sort() {
+        if (head == null || head.next == head) {
+            return;
+        }
+        Node current = head, index = null;
+        int temp;
+        do {
+            index = current.next;
+            while (index != head) {
+                if (current.data > index.data) {
+                    temp = current.data;
+                    current.data = index.data;
+                    index.data = temp;
+                }
+                index = index.next;
+            }
+            current = current.next;
+        } while (current.next != head);
+    }
+
+    public void removeDuplicates() {
+        if (head == null || head.next == head) {
+            return;
+        }
+        Node current = head, index, temp;
+        do {
+            temp = current;
+            index = current.next;
+            while (index != head) {
+                if (current.data == index.data) {
+                    temp.next = index.next;
+                } else {
+                    temp = index;
+                }
+                index = index.next;
+            }
+            current = current.next;
+        } while (current.next != head);
+    }
+
+    public int count() {
+        if (head == null) {
+            return 0;
+        }
+        int count = 0;
+        Node temp = head;
+        do {
+            count++;
+            temp = temp.next;
+        } while (temp != head);
+        return count;
+    }
+
+    public boolean search(int data) {
+        if (head == null) {
+            return false;
+        }
+        Node temp = head;
+        do {
+            if (temp.data == data) {
+                return true;
+            }
+            temp = temp.next;
+        } while (temp != head);
+        return false;
+    }
+}
+
